@@ -8,7 +8,7 @@ import tkinter
 import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
-import cv2, os
+import cv2, os, gdown
 import numpy as np
 import pandas as pd 
 from scipy import ndimage
@@ -18,6 +18,10 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 def load_model():
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    kpt_file = 'yolov7-w6-pose.pt'
+    if not os.path.isfile(kpt_file):
+        url = 'https://drive.google.com/uc?id=1DLu3LnMmkvQQZ3T_d1k0aoZZ08x8lHvM'
+        gdown.download(url,quiet=False)
     model = torch.load('yolov7-w6-pose.pt', map_location=device)['model']
     # Put in inference mode
     model.float().eval()
@@ -552,8 +556,8 @@ def run_vid_(vid_path,configs):
     cv2.destroyAllWindows()
 
 
-vid_path = 'videos/aicity.MP4'
-# vid_path = 'videos/vtti.mp4'
+# vid_path = 'videos/aicity.MP4'
+vid_path = 'videos/vtti.mp4'
 # plot = 0 # set to 1 to plot event time series. red line shows start and end of events
 # vis = 1 
 # rotate = 0 # set to 1 if image is rotated. 
@@ -564,10 +568,10 @@ vid_path = 'videos/aicity.MP4'
 configs = {
     'plot': 0,
     'vis': 1,
-    'rotate':0, ## rotate image
+    'rotate':1, ## rotate image
     'plot_kpts':1, ## plot key points on image
     'save_video': 0, ## saves video with keypoints and events. 
-    'left_ear':1,  ## is left ear visible
+    'left_ear':0,  ## is left ear visible
 }
 # print (configs)
 # print (configs['save_video'])
